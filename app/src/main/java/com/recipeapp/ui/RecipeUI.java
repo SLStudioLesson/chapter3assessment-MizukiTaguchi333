@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.recipeapp.datahandler.DataHandler;
 import com.recipeapp.model.Ingredient;
@@ -39,6 +40,7 @@ public class RecipeUI {
                         displayRecipes();
                         break;
                     case "2":
+                        addNewRecipe();
                         break;
                     case "3":
                         break;
@@ -57,21 +59,23 @@ public class RecipeUI {
 
     private void displayRecipes() throws IOException {
         try {
-            ArrayList<Recipe> recipes = dataHandler.readData();
-            System.out.println(recipes);
+            List<Recipe> recipes = dataHandler.readData();
+            
+
             if (recipes == null) {
                 System.out.println("No recipes available.");
             } else {
                 
                 System.out.println("Recipes:");
+                System.out.println("-----------------------------------");
                 for (Recipe recipe : recipes) {
-                    System.out.println("-----------------------------------");
                     System.out.println("Recipe Name: " + recipe.getName());
                     System.out.print("Main Ingredients: ");
                     // System.out.println(recipe.getIngredients().toString());
-                    for (Ingredient ing: recipe.getIngredients()) {
-                        System.out.println(ing.getName());
+                    for (int i = 0; i < recipe.getIngredients().size() - 1; i++){
+                        System.out.print(recipe.getIngredients().get(i).getName() + ", ");
                     }
+                    System.out.println(recipe.getIngredients().get(recipe.getIngredients().size() - 1).getName());
                     System.out.println("-----------------------------------");
                     
                 }
@@ -85,6 +89,7 @@ public class RecipeUI {
 
     private void addNewRecipe() throws IOException {
         ArrayList<Ingredient> newIngredients = new ArrayList<>();
+        Ingredient ingredient;
         System.out.println();
         System.out.println("Adding a new recipe.");
         System.out.print("Enter recipe name: ");
@@ -93,14 +98,15 @@ public class RecipeUI {
 
         while (true) {
             System.out.print("Ingredient: ");
-            String ingredient = reader.readLine();
-            newIngredients.add(new Ingredient(ingredient));
+            String ingredientName = reader.readLine();
+            ingredient = new Ingredient(ingredientName);
+            newIngredients.add(ingredient);
 
-            if(ingredient.equals("done")) {
+            if(ingredientName.equals("done")) {
                 System.out.println("successfully.");
                 break;
             }
-            dataHandler.writeData(new Recipe(name, newIngredients));
         }
+        dataHandler.writeData(new Recipe(name, newIngredients));
     }
 }

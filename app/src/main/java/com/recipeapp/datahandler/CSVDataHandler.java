@@ -27,24 +27,25 @@ public class CSVDataHandler implements DataHandler {
     // `recipes.csv`からレシピデータを読み込み、それをリスト形式で返します。
     public ArrayList<Recipe> readData() throws IOException {
         ArrayList<Recipe> recipes = new ArrayList<>();
-        Recipe recipe;
-        Ingredient ingredient;
         ArrayList<Ingredient> ingredients;
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            // BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                ingredients = new ArrayList<>();
-                String[] lists = line.split("," ,2);
-                String[] ing = lists[1].split(",");
-            
-                for (String s : ing) {
-                    
-                    ingredients.add(new Ingredient(s));
-                }
-                recipes.add(new Recipe(lists[0], ingredients));
+        Ingredient ingredient;
+        Recipe recipe;
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String l;
+            while ((l = reader.readLine()) != null) {
+
+                ingredients = new ArrayList<>();
+                String recipeName = l.split(",", 2)[0];
+                String[] ingredientsNames = l.split("," , 2)[1].split(",");
+                for (String n : ingredientsNames) {
+                    ingredient = new Ingredient(n);
+                    ingredients.add(ingredient);
+                }
+                recipe = new Recipe(recipeName, ingredients);
+                recipes.add(recipe);
             }
+
         } catch (IOException e) {
             System.out.println("Error");
         }
@@ -53,7 +54,11 @@ public class CSVDataHandler implements DataHandler {
 
     public void writeData(Recipe recipe) throws IOException {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)))) {
-            out.println(recipe.getName() + recipe.getIngredients());
+            out.print(recipe.getName() + ",");
+            for(int i = 0; i < recipe.getIngredients().size() - 1; i++) {
+                out.print(recipe.getIngredients().get(i).getName() + ", ");
+            }
+            out.print(recipe.getIngredients().get(recipe.getIngredients().size() - 1).getName());
 
         }
     };
