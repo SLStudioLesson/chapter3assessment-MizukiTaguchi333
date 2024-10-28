@@ -62,7 +62,7 @@ public class RecipeUI {
             List<Recipe> recipes = dataHandler.readData();
             
 
-            if (recipes == null) {
+            if (recipes.isEmpty()) {
                 System.out.println("No recipes available.");
             } else {
                 
