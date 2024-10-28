@@ -1,12 +1,16 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import com.recipeapp.datahandler.CSVDataHandler;
 import com.recipeapp.datahandler.DataHandler;
 import com.recipeapp.datahandler.JSONDataHandler;
 import com.recipeapp.ui.RecipeUI;
-import java.io.*;
 
 public class App {
 
     public static void main(String[] args) {
+        DataHandler datahandler;
+        RecipeUI recipeUI;
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             System.out.println("Choose the file format:");
@@ -15,6 +19,13 @@ public class App {
             System.out.print("Select (1/2): ");
             String choice = reader.readLine();
             
+            if (choice.equals("2")) {
+                datahandler = new JSONDataHandler();
+            } else {
+                datahandler = new CSVDataHandler();
+            }
+            recipeUI = new RecipeUI(datahandler);
+            recipeUI.displayMenu();
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
